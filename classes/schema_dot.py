@@ -4,6 +4,7 @@ from datetime import datetime
 class MeetingRoom(BaseModel):
     room_name: str
     location: str
+    address: str
     capacity: int
     priceOnHours: float
 
