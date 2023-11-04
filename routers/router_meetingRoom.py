@@ -3,10 +3,10 @@ from typing import List
 import uuid
 
 router = APIRouter(
-    prefix='/auth',
-    tags=["Auth"]
+    prefix='/meetingroom',
+    tags=["Meetingroom"]
 )
 
 @router.get('/',response_model=dict)
-async def get_auth():
-    return { "message":"auth"}
+async def get_meetingroom():
+    return { "message":" liste des annonces disponibles"}

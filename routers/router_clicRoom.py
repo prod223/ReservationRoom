@@ -3,10 +3,11 @@ from typing import List
 import uuid
 
 router = APIRouter(
-    prefix='/auth',
-    tags=["Auth"]
+    prefix='/clicroom',
+    tags=["Clicroom"]
 )
 
+
 @router.get('/',response_model=dict)
-async def get_auth():
-    return { "message":"auth"}
+async def get_clicroom():
+    return { "message":" nombre de clic sur une annonce"}

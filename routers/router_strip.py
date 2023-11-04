@@ -3,10 +3,10 @@ from typing import List
 import uuid
 
 router = APIRouter(
-    prefix='/auth',
-    tags=["Auth"]
+    prefix='/stripe',
+    tags=["Stripe"]
 )
 
 @router.get('/',response_model=dict)
-async def get_auth():
-    return { "message":"auth"}
+async def get_strip():
+    return { "message":" facturation sur strip"}
