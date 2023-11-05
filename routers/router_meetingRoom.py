@@ -70,4 +70,17 @@ async def delete_meeting_room_by_id(meeting_id: str):
     else:
         raise HTTPException(status_code=404, detail="Meeting room not found")
     
+from fastapi import HTTPException
+
+@router.patch('/{meeting_id}', response_model=MeetingRoom)
+async def patch_meeting_room_by_id(meeting_id: str, updated_meeting_room: MeetingRoomNoId):
+    meetingRoomData = db.child("meetingRooms").child(meeting_id).get().val()
+    if meetingRoomData:
+        # Mettez à jour partiellement la salle de réunion dans la base de données Firebase
+        meeting_room_dict = updated_meeting_room.dict(exclude_unset=True)
+        db.child("meetingRooms").child(meeting_id).update(meeting_room_dict)
+        updated_meeting_room.id = meeting_id
+        return updated_meeting_room
+    else:
+        raise HTTPException(status_code=404, detail="Meeting room not found")
 
