@@ -82,11 +82,19 @@ async def delete_meeting_room_by_id(meeting_id: str, userData: int = Depends(get
 @router.patch('/{meeting_id}', response_model=MeetingRoom)
 async def patch_meeting_room_by_id(meeting_id: str, updated_meeting_room: MeetingRoomNoId,userData: int = Depends(get_current_user)):
     meetingRoomData = db.child("meetingRooms").child(meeting_id).get(userData['idToken']).val()
-    if meetingRoomData:
+    if meetingRoomData and meetingRoomData.get('owner_id') == userData['uid']:
         # Mettez à jour partiellement la salle de réunion dans la base de données Firebase
-        meeting_room_dict = updated_meeting_room.dict(exclude_unset=True)
-        db.child("meetingRooms").child(meeting_id).update(meeting_room_dict)
-        updated_meeting_room.id = meeting_id
+        update_data = {
+            "title": updated_meeting_room.title,
+            "description": updated_meeting_room.description,
+            "location": updated_meeting_room.location,
+            "capacity": updated_meeting_room.capacity,
+            "priceOnHours": updated_meeting_room.priceOnHours,
+        }
+        db.child("meetingRooms").child(meeting_id).update(update_data)
+        
+        updated_meeting_room_data = db.child("meetingRooms").child(meeting_id).get(userData['idToken']).val()
+        updated_meeting_room = MeetingRoom(**updated_meeting_room_data)
         return updated_meeting_room
     else:
         raise HTTPException(status_code=404, detail="Meeting room not found")
