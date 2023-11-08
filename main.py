@@ -20,3 +20,4 @@ app.include_router(routers.router_auth.router)
 app.include_router(routers.router_clicRoom.router)
 app.include_router(routers.router_meetingRoom.router)
 app.include_router(routers.router_strip.router)
+
