@@ -21,7 +21,7 @@ def test_get_all_meeting_rooms(cleanup):
     assert response.status_code == 200
 
 #test pour ajouter un nouveau room
-def test_add_new_meeting_room(cleanup):
+def test_add_new_meeting_room(cleanup ):
     client.post("/auth/signup", json={"email": "test_adama@example.com", "password": "testpassword"})
     
     #Creation les données de la salle de réunion
@@ -29,7 +29,7 @@ def test_add_new_meeting_room(cleanup):
     auth_headers = {"Authorization": f"Bearer {auth_token}"}
     
     meeting_room_data = {
-        "title": "Nouvelle salle de réunion",
+        "title": "test_salle",
         "description": "Il s'agit d'une nouvelle salle de réunion d'une capacité de 20 personnes.",
         "location": "San Francisco, CA",
         "capacity": 20,
@@ -46,16 +46,23 @@ def test_add_new_meeting_room(cleanup):
     assert nouvelle_salle_de_reunion["capacity"] == meeting_room_data["capacity"]
     assert nouvelle_salle_de_reunion["priceOnHours"] == meeting_room_data["priceOnHours"]
 
+    #supprssion
+    meeting_id = response.json()["id"]
+
+    ####----supprimez la salle de réunion après ------####
+    response = client.delete(f"/meetingroom/{meeting_id}", headers=auth_headers)
+    assert response.status_code == 200
+
 #test pour faire un get by id
-def test_get_meeting_room_by_id(cleanup):
+def test_get_meeting_room_by_id(cleanup ):
     # Créez un utilisateur de test
     client.post("/auth/signup", json={"email": "test_user@example.com", "password": "testpassword"})
     auth_token = authUser.sign_in_with_email_and_password(email="test_user@example.com", password="testpassword")['idToken']
     auth_headers = {"Authorization": f"Bearer {auth_token}"}
       
-    # Créez une nouvelle salle de réunion pour le test
+    # Créez une test_salle pour le test
     meeting_room_data = {
-        "title": "Nouvelle salle de réunion",
+        "title": "test_salle",
         "description": "Il s'agit d'une nouvelle salle de réunion d'une capacité de 20 personnes.",
         "location": "San Francisco, CA",
         "capacity": 20,
@@ -72,17 +79,20 @@ def test_get_meeting_room_by_id(cleanup):
     response = client.get(f"/meetingroom/{meeting_id}", headers=auth_headers)
     #requête a réussi (code de statut 200)
     assert response.status_code == 200
+    ####----supprimez la salle de réunion après ------####
+    response = client.delete(f"/meetingroom/{meeting_id}", headers=auth_headers)
+    assert response.status_code == 200
 
 #test pour faire un delete 
-def test_delete_meeting_room_by_id(cleanup):
+def test_delete_meeting_room_by_id(cleanup ):
     # Créez un utilisateur de test
     client.post("/auth/signup", json={"email": "test_user@example.com", "password": "testpassword"})
     auth_token = authUser.sign_in_with_email_and_password(email="test_user@example.com", password="testpassword")['idToken']
     auth_headers = {"Authorization": f"Bearer {auth_token}"}
 
-    # Créez une nouvelle salle de réunion pour le test
+    # Créez une test_salle pour le test
     meeting_room_data = {
-        "title": "Nouvelle salle de réunion",
+        "title": "test_salle",
         "description": "Il s'agit d'une nouvelle salle de réunion d'une capacité de 20 personnes.",
         "location": "San Francisco, CA",
         "capacity": 20,
@@ -101,7 +111,7 @@ def test_delete_meeting_room_by_id(cleanup):
     assert response.json() == {"message": "Meeting room deleted"}
 
 #fai un update sur une donnée
-def test_patch_meeting_room_by_id(cleanup):
+def test_patch_meeting_room_by_id(cleanup ):
     # Créez un utilisateur de test
     client.post("/auth/signup", json={"email": "test_user@example.com", "password": "testpassword"})
     auth_token = authUser.sign_in_with_email_and_password(email="test_user@example.com", password="testpassword")['idToken']
@@ -109,7 +119,7 @@ def test_patch_meeting_room_by_id(cleanup):
 
     # Créez une nouvelle salle de réunion pour le test
     meeting_room_data = {
-        "title": "Nouvelle salle de réunion",
+        "title": "test_salle",
         "description": "Il s'agit d'une nouvelle salle de réunion d'une capacité de 20 personnes.",
         "location": "San Francisco, CA",
         "capacity": 20,
@@ -122,7 +132,7 @@ def test_patch_meeting_room_by_id(cleanup):
 
     # Mettez à jour partiellement la salle de réunion avec le meeting_id
     updated_meeting_room_data = {
-        "title": "Salle de réunion mise à jour",
+        "title": "test_salle",
         "description": "Description mise à jour",
         "location": "New York, NY",
         "capacity": 25,
@@ -140,4 +150,6 @@ def test_patch_meeting_room_by_id(cleanup):
     assert updated_meeting_room["location"] == updated_meeting_room_data["location"]
     assert updated_meeting_room["capacity"] == updated_meeting_room_data["capacity"]
     assert updated_meeting_room["priceOnHours"] == updated_meeting_room_data["priceOnHours"]
-
+    ####----supprimez la salle de réunion après ------####
+    response = client.delete(f"/meetingroom/{meeting_id}", headers=auth_headers)
+    assert response.status_code == 200

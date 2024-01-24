@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app
 from firebase_admin import auth
+from firebase_admin import db
 
 client = TestClient(app)
 
